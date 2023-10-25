@@ -14,9 +14,11 @@ optimizer = optim.Adam(model.parameters(), lr=0.01)
 epochs = 100
 best_val_loss = float('inf')
 checkpoint_dir = 'checkpoints'
+weights_dir = 'weights'  
 
 # Create directory for checkpoints if it does not exist
 os.makedirs(checkpoint_dir, exist_ok=True)
+os.makedirs(weights_dir, exist_ok=True)
 
 for epoch in range(epochs):
     model.train()
@@ -58,4 +60,5 @@ for epoch in range(epochs):
             'val_loss': average_val_loss,
         }, checkpoint_path)
 
-    model.train()
+weights_path = os.path.join(weights_dir, f'model_weights_best.pt')  
+torch.save(model.state_dict(), weights_path)
