@@ -3,18 +3,17 @@ from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-def create_data_loaders(input_df, output_df, batch_size=10, test_size1=0.1, val_size=0.1, random_state=42):
+def create_data_loaders(input_df, output_df, batch_size=10, test_size1=0.1, val_size=0.1, random_state=42, device=torch.device("cuda" if torch.cuda.is_available() else "cpu")):
     input_df=pd.read_csv(input_df) 
     output_df=pd.read_csv(output_df)   
-
     input_columns = input_df.iloc[:, [0, 1, 5, 6]]
     output_columns = output_df.iloc[:, :]
 
-    input_tensor = torch.tensor(input_columns.values, dtype=torch.float32)
-    output_tensor = torch.tensor(output_columns.values, dtype=torch.float32)
+    input_tensor = torch.tensor(input_columns.values, dtype=torch.float32, device=device)
+    output_tensor = torch.tensor(output_columns.values, dtype=torch.float32, device=device)
 
-    input_array = input_tensor.numpy()
-    output_array = output_tensor.numpy()
+    input_array = input_tensor.cpu().numpy() 
+    output_array = output_tensor.cpu().numpy()
 
     input_train, input_temp, output_train, output_temp = train_test_split(
         input_array, output_array, test_size=(val_size + test_size1), random_state=random_state
@@ -24,12 +23,12 @@ def create_data_loaders(input_df, output_df, batch_size=10, test_size1=0.1, val_
         input_temp, output_temp, test_size=test_size1/(val_size + test_size1), random_state=random_state
     )
 
-    input_train = torch.tensor(input_train, dtype=torch.float32)
-    input_val = torch.tensor(input_val, dtype=torch.float32)
-    input_test = torch.tensor(input_test, dtype=torch.float32)
-    output_train = torch.tensor(output_train, dtype=torch.float32)
-    output_val = torch.tensor(output_val, dtype=torch.float32)
-    output_test = torch.tensor(output_test, dtype=torch.float32)
+    input_train = torch.tensor(input_train, dtype=torch.float32, device=device)
+    input_val = torch.tensor(input_val, dtype=torch.float32, device=device)
+    input_test = torch.tensor(input_test, dtype=torch.float32, device=device)
+    output_train = torch.tensor(output_train, dtype=torch.float32, device=device)
+    output_val = torch.tensor(output_val, dtype=torch.float32, device=device)
+    output_test = torch.tensor(output_test, dtype=torch.float32, device=device)
 
     train_dataset = TensorDataset(input_train, output_train)
     val_dataset = TensorDataset(input_val, output_val)

@@ -1,22 +1,23 @@
-# main.py
 from models import *
 from loss import *
-from dataloader import create_data_loaders
+from dataloader_gpu import create_data_loaders
+import torch
 import torch.optim as optim
 import os
 
-train_loader, val_loader, _ = create_data_loaders(input_df, output_df, batch_size=10)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = Model1().to(device)
 
-model = Model1()
 criterion = rmse_loss()
 optimizer = optim.Adam(model.parameters(), lr=0.01)
+
+train_loader, val_loader, _ = create_data_loaders(input_df, output_df, batch_size=10, device=device)
 
 epochs = 100
 best_val_loss = float('inf')
 checkpoint_dir = 'checkpoints'
 weights_dir = 'weights'  
 
-# Create directory for checkpoints if it does not exist
 os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(weights_dir, exist_ok=True)
 
@@ -25,6 +26,7 @@ for epoch in range(epochs):
     total_loss = 0
 
     for inputs, targets in train_loader:
+        inputs, targets = inputs.to(device), targets.to(device)
         optimizer.zero_grad()
         outputs = model(inputs)
         loss = criterion(outputs, targets)
@@ -42,6 +44,7 @@ for epoch in range(epochs):
 
     with torch.no_grad():
         for val_inputs, val_targets in val_loader:
+            val_inputs, val_targets = val_inputs.to(device), val_targets.to(device)
             val_outputs = model(val_inputs)
             val_loss = criterion(val_outputs, val_targets)
             total_val_loss += val_loss.item()
@@ -62,4 +65,4 @@ for epoch in range(epochs):
         best_model_weights = model.state_dict()
     
 weights_path = os.path.join(weights_dir, f'model_weights_best_{best_epoch}.pt')  
-torch.save(model.state_dict(), weights_path)
+torch.save(best_model_weights, weights_path)
