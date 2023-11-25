@@ -50,19 +50,25 @@ class Model2(nn.Module):
         x = self.linear7(x)
         return x
 
-
 class Model3(nn.Module):
     def __init__(self):
         super(Model3, self).__init__()
-        self.Linear1 = nn.Linear(6, 64)
-        self.Linear2 = nn.Linear(64, 128)
-        self.Linear3 = nn.Linear(128, 128)
+        self.linear1 = nn.Linear(4, 128)
+        self.linear2 = nn.Linear(128, 256)
+        self.linear3 = nn.Linear(256, 512)
+        self.linear4 = nn.Linear(512, 512)
+        self.linear5 = nn.Linear(512, 128)
+  
 
     def forward(self, x):
-        x = F.tanh(self.Linear1(x))
-        x = F.tanh(self.Linear2(x))
-        x = F.sigmoid(self.Linear3(x))
+        x = F.tanh(self.linear1(x))
+        x = F.tanh(self.linear2(x))
+        x = F.tanh(self.linear3(x))
+        x = F.tanh(self.linear4(x))
+        x = F.sigmoid(self.linear5(x))
         return x
+
+
 
 class LSTMModel(nn.Module):
     def __init__(self,input_size,hidden_size,num_layers,output_size):
@@ -101,7 +107,7 @@ class LSTMModelWithMultiheadAttention(nn.Module):
         out, _ = self.multihead_attention(out.transpose(0, 1), out.transpose(0, 1), out.transpose(0, 1))
         out = out.transpose(0, 1)
 
-        out = F.tanh(self.linear1(out[:, -1, :]))
+        out = F.relu(self.linear1(out[:, -1, :])) #tanh
         out = F.sigmoid(self.linear2(out))
         out = self.linear3(out)
 

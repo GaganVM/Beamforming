@@ -10,12 +10,22 @@ def create_data_loaders(input_df,
                         test_size1=0.1, 
                         val_size=0.1, 
                         random_state=42, 
+                        input_col=list(range(10)),
+                        input_size=5,
                         device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
                         ):
     input_df=pd.read_csv(input_df) 
-    output_df=pd.read_csv(output_df)   
-    # input_columns = input_df.iloc[:,[2,3,4,7,8,9]]
-    input_columns = input_df.iloc[:,:]
+    output_df=pd.read_csv(output_df)  
+    if input_size == 5:
+        input_columns = input_df.iloc[:, input_col]
+    elif input_size == 3:
+        input_columns = input_df.iloc[:, [2, 3, 4, 7, 8, 9]]
+    elif input_size == 2: 
+        input_columns = input_df.iloc[:, [0, 1, 5, 6]]
+    else:
+        raise ValueError("Unsupported input_size. Please provide a valid input_size.")
+
+# Rest of your code using input_columns...
 
     output_columns = output_df.iloc[:, :]
 
@@ -28,7 +38,8 @@ def create_data_loaders(input_df,
     input_array=scaler_input.fit_transform(input_array)
     output_array=scaler_output.fit_transform(output_array)
     
-    input_array=input_array.reshape(-1,2,5)
+    # print(input_array.shape)
+    input_array=input_array.reshape(-1,2,input_size)
     
     print("Device for Dataloder:",device)
     

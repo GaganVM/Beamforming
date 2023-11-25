@@ -8,7 +8,7 @@ import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
-model = Model1().to(device)
+model = Model3().to(device)
 criterion = RMSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -17,8 +17,8 @@ train_loader, val_loader, _ = create_data_loaders('C:\\Users\\admin\\Desktop\\io
 
 epochs = 200
 best_val_loss = np.inf
-checkpoint_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_checkpoints\\position\\lstmmodel'
-weights_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_weights\\position\\lstmmodel1'  
+checkpoint_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_checkpoints\\azimuthal\\model3'
+weights_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_weights\\azimuthal\\model3'  
 
 os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(weights_dir, exist_ok=True)

@@ -6,26 +6,27 @@ import torch.optim as optim
 import os
 import time
 
-input_size=5
+input_size=5 #change to 5
 hidden_size=576
 num_layers=4
 output_size=128
+num_heads=10
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
-model = LSTMModel(input_size,hidden_size,num_layers,output_size).to(device)
+model =LSTMModelWithMultiheadAttention(input_size,hidden_size,num_layers,output_size,num_heads).to(device)
 criterion = RMSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-# checkpoint=torch.load('C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_checkpoints\\position\\lstmmodel\\model_checkpoint_epoch_84.pt')
+# checkpoint=torch.load('C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_checkpoints\\azimuthal\\lstmattention\\head8\\model_checkpoint_epoch_178.pt')
 # model.load_state_dict(checkpoint['model_state_dict'])
 # optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 
 print("Loading data..")
-train_loader, val_loader, _ = create_data_loaders('C:\\Users\\admin\\Desktop\\iot\\Data\\input_signal_data.csv','C:\\Users\\admin\\Desktop\\iot\\Data\\output_weight_parameters_data.csv', batch_size=1024, device=device)
-# start_epoch=84
+train_loader, val_loader, _ = create_data_loaders('C:\\Users\\admin\\Desktop\\iot\\Data\\input_signal_data.csv','C:\\Users\\admin\\Desktop\\iot\\Data\\output_weight_parameters_data.csv', batch_size=1024,input_size=5,device=device)
+# start_epoch=178
 epochs = 200
 best_val_loss = np.inf
-checkpoint_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_checkpoints\\azimuthal_position\\lstmmodel'
-weights_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_weights\\azimuthal_position\\lstmmodel'  
+checkpoint_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_checkpoints\\azimuthal_position\\lstmattention\\head10'#remove azimuthal just position, azimuthal_position
+weights_dir = 'C:\\Users\\admin\\Desktop\\iot\\Beamforming-main\\autoencoder_weights\\azimuthal_position\\lstmattention\\head10'  #remove azimuthal just position, azimuthal_position
 
 os.makedirs(checkpoint_dir, exist_ok=True)
 os.makedirs(weights_dir, exist_ok=True)
