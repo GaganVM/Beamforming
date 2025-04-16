@@ -1,0 +1,21 @@
+name: VectorSync
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.9
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=11.8
+  - numpy
+  - matplotlib
+  - pandas
+  - scikit-learn
+  - scipy
+  - notebook
+  - tqdm
+
