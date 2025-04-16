@@ -85,7 +85,7 @@ conda activate VectorSync
     │   └── model_weights_best_97.pt
     ├── music.ipynb
     ├── nsb.ipynb <!-- data generation for model training -->
-    ├── simulation.ipynb <!-- testing on scinario -->
+    ├── simulation.ipynb <!-- testing on scenario -->
     ├── time_and_coorelation_analysis.ipynb
     ├── utils.py
     └── weight.py
